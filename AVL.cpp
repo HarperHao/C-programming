@@ -1,1030 +1,127 @@
-
-
-
-
-#include<stdio.h>
-
+ï»¿#include<stdio.h>
 #include<stdlib.h>
-
-#include<stdbool.h>
-
-#include<Windows.h>
-
-	const int MaxSize = 100;
-
-char Getchar();				// »ñÈ¡Ò»¸öÓĞĞ§×Ö·û£¨±ÜÃâÓÃ»§ÊäÈë´íÎóµÄÊı¾İÀàĞÍÔì³É³ÌĞò±ÀÀ££©
-
-int	 Getint();				// »ñÈ¡Ò»¸öÓĞĞ§Êı×Ö£¨µ÷ÓÃ½áÊø»º³åÇøÎŞ²ĞÓà£©
-
 typedef char datatype;
+typedef struct Tree_Node {
+	datatype info;
+	TNode *Lchild;
+	TNode* Rchild;
 
-//////////////¶ş²æÊ÷///////////////////
-
-typedef struct node {
-
-	datatype data;
-
-	struct node*Lchild;
-
-	struct node*Rchild;
-
-}bintnode;
-
-typedef bintnode *bintree;
-
-typedef bintree ElementType;
-
-bintree root;
-
-////////////////////////////////////////
-
-///////////////Ë³ĞòÕ»//////////////////
-
-typedef struct SNode {
-
-	ElementType Date[MaxSize];
-
-	int  top;//Õ»¶¥Ö¸Õë
-
-}snode;
-
-typedef struct SNode * Stack;
-
-Stack CreatStack()
-
+}TNode;
+typedef TNode* BinTree;
+//åœ¨äºŒå‰æœç´¢æ ‘é‡Œè¿”å›å€¼ä¸ºxçš„ç»“ç‚¹çš„åœ°å€(é€’å½’)
+BinTree Find(BinTree t, datatype x)
 {
-
-	Stack s = (Stack)malloc(sizeof(struct SNode));
-
-	s->top = -1;
-
-	return s;
-
+	if (!t)
+		return NULL;//ç©ºæ ‘ï¼Œæ²¡æœ‰æ‰¾åˆ°
+	else if (x > t->info)
+		Find(t->Rchild, x);
+	else if (x < t->info)
+		Find(t->Lchild, x);
+	else if (x == t->info)
+		return t;
 }
-
-bool  IsFull(Stack s)
-
+//åœ¨äºŒå‰æœç´¢æ ‘é‡Œè¿”å›å€¼ä¸ºxçš„ç»“ç‚¹çš„åœ°å€(éé€’å½’)
+BinTree Find1(BinTree t, datatype x)
 {
-
-	if (s->top == MaxSize)
-
-		return true;
-
-	else
-
-		return false;
-
-}
-
-bool  IsEmpty(Stack s)
-
-{
-
-	return(s->top == -1);
-
-}
-
-void Push(Stack s, ElementType x)
-
-{
-
-	if (IsFull(s))
-
+	while (t)//å½“æ ‘ä¸ä¸ºç©ºçš„æ—¶å€™ä¸€ç›´æŸ¥æ‰¾
 	{
-
-		printf("Õ»ÒÑÂú");
-
-	}
-
-	else
-
-	{
-
-		s->Date[++s->top] = x;
-
-
-
-	}
-
-}
-
-ElementType Pop(Stack s)
-
-{
-
-	if (IsEmpty(s))
-
-	{
-
-		printf("Õ»ÒÑ¿Õ");
-
-		return NULL;
-
-	}
-
-	else
-
-	{
-
-		return s->Date[(s->top)--];
-
-	}
-
-}
-
-///////////////////////////////////
-
-// »ñÈ¡Ò»¸öÓĞĞ§×Ö·û
-
-char Getchar()
-
-{
-
-	char c[20] = {};
-
-	gets_s(c, 20);
-
-	if (c[1]) return '#';
-
-	return c[0];
-
-}
-
-// »ñÈ¡Ò»¸öÓĞĞ§Êı×Ö£¨±ÜÃâÓÃ»§´íÎóÀàĞÍµÄÊäÈëÔì³É³ÌĞò±ÀÀ££©
-
-int Getint()
-
-{
-
-	char c[20] = {};
-
-	gets_s(c, 20);
-
-	int n = 0;
-
-	int k = 0;
-
-	while (c[k])k++;
-
-	for (int i = 0; c[i]; i++)
-
-	{
-
-		if (c[i] < 48 || c[i] > 58)return 0;	// ´íÎó×Ö·û
-
-		else
-
-		{
-
-			int t = 1;
-
-			for (int i = --k; i > 0; i--)t = t * 10;
-
-			n += (int(c[i]) - 48)*t;			// ×Ö·û×ªÊı×Ö
-
-		}
-
-	}
-
-	return n;
-
-}
-
-//Ç°Ğò±éÀúµİ¹é
-
-void preorder(bintree t)
-
-{
-
-	if (t != NULL)
-
-	{
-
-		printf("%c", t->data);
-
-		preorder(t->Lchild);
-
-		preorder(t->Rchild);
-
-	}
-
-}
-
-//ÖĞĞò±éÀúµİ¹é
-
-void midorder(bintree t)
-
-{
-
-	if (t != NULL)
-
-	{
-
-		midorder(t->Lchild);
-
-		printf("%c", t->data);
-
-		midorder(t->Rchild);
-
-	}
-
-}
-
-//ºóĞò±éÀúµİ¹é
-
-void behindorder(bintree t)
-
-{
-
-	if (t != NULL)
-
-	{
-
-		behindorder(t->Lchild);
-
-		behindorder(t->Rchild);
-
-		printf("%c", t->data);
-
-	}
-
-}
-
-//Ç°Ğò±éÀú·Çµİ¹éÊµÏÖ
-
-void preorder1(bintree t)
-
-{
-
-	Stack s;
-
-	bintree q = NULL;
-
-	q = t;
-
-	s = CreatStack();
-
-	while ((q != NULL) || (!IsEmpty(s)))
-
-	{
-
-		while (q != NULL)//Ò»Ö±Ïò×ó½«ÑØÍ¾×ó½ÚµãÑ¹ÈëÕ»ÖĞ
-
-		{
-
-			printf("%c ", q->data);
-
-			Push(s, q);//µÚÒ»´ÎÓöµ½qÕâ¸ö½áµã
-
-			q = q->Lchild;
-
-		}
-
-		if (!IsEmpty(s))
-
-		{
-
-			q = Pop(s);//µÚ¶ş´ÎÓöµ½q½áµã,´ËÊ±½áµãÏàµ±ÓÚÖ»ÓĞÓÒ¶ù×ÓÃ»ÓĞ×ó¶ù×Ó,ËùÒÔÖ±½ÓÊä³öÕâ¸öÊı¾İ¼´¿É
-
-
-
-			q = q->Rchild;//·ÃÎÊ´Ë½ÚµãµÄÓÒ¶ù×Ó
-
-		}
-
-	}
-
-}
-
-//ÖĞĞò±éÀú·Çµİ¹éÊµÏÖ
-
-void midorder1(bintree t)
-
-{
-
-	Stack s;
-
-	bintree q;
-
-	q = t;
-
-	s = CreatStack();
-
-	while ((q != NULL) || (!IsEmpty(s)))
-
-	{
-
-		while (q != NULL)//Ò»Ö±Ïò×ó½«ÑØÍ¾×ó½ÚµãÑ¹ÈëÕ»ÖĞ
-
-		{
-
-
-
-			Push(s, q);//½«qÕâ¸ö½áµãÑ¹ÈëÕ»ÖĞ
-
-			q = q->Lchild;
-
-		}
-
-		if (!IsEmpty(s))
-
-		{
-
-			q = Pop(s);//µÚ¶ş´ÎÓöµ½q½áµã,´ËÊ±½áµãÏàµ±ÓÚÖ»ÓĞÓÒ¶ù×ÓÃ»ÓĞ×ó¶ù×Ó,ËùÒÔÖ±½ÓÊä³öÕâ¸öÊı¾İ¼´¿É
-
-			printf("%c ", q->data);//µÚÒ»´ÎÓöµ½qÕâ¸ö½áµã
-
-			q = q->Rchild;//·ÃÎÊ´Ë½ÚµãµÄÓÒ¶ù×Ó
-
-		}
-
-	}
-
-}
-
-//ºóĞò±éÀú·Çµİ¹éÊµÏÖ
-
-void behindorder1(bintree t)
-
-{
-
-	bintree r = NULL;
-
-	Stack s;
-
-	s = CreatStack();
-
-	while (t != NULL || (!IsEmpty(s)))
-
-	{
-
-		while (t != NULL)
-
-		{
-
-			Push(s, t);
-
+		if (x > t->info)
+			t = t->Rchild;
+		else if (x < t->info)
 			t = t->Lchild;
-
-		}
-
-		if (!IsEmpty(s))
-
-		{
-
-			t = Pop(s);
-
-			if (t->Rchild == NULL || t->Rchild == r)//ÓÒ×ÓÊ÷±»·ÃÎÊÍêÁË
-
-			{
-
-				printf("%c ", t->data);
-
-				r = t;
-
-				t = NULL;
-
-			}
-
-			else//»¹Ã»ÓĞ·ÃÎÊÓÒ×ÓÊ÷
-
-			{
-
-				Push(s, t);
-
-				t = t->Rchild;
-
-			}
-
-		}
-
-
-
-	}
-
-}
-
-//ÊµÏÖ¶ş²æÊ÷µÄ²éÕÒ£¬·µ»ØµØÖ·
-
-bintree locate(bintree t, datatype x)
-
-{
-
-	bintree p;
-
-	if (t == NULL)
-
-	{
-
-		//printf("¸ÃÊ÷ÊÇ¿ÕÊ÷£¡\n");
-
-		return NULL;
-
-	}
-
-	else
-
-		if (t->data == x)
-
-			return t;
-
 		else
-
-		{
-
-			p = locate(t->Lchild, x);//ÔÚ×ó×ÓÊ÷Àï²éÕÒ
-
-			if (p != NULL)
-
-				return p;
-
-			else
-
-				return locate(t->Rchild, x);//ÔÚÓÒ×ÓÊ÷ÀïÃæ²éÕÒ
-
-		}
-
+			return t;
+	}
+	return NULL; 
 }
-
-//Í³¼Æ¶ş²æÊ÷ÖĞ½áµãµÄ¸öÊı
-
-int numofbTree(bintree t)
-
+//åœ¨äºŒå‰æœç´¢æ ‘é‡Œè¿”å›æœ€å°å€¼ç»“ç‚¹çš„åœ°å€(é€’å½’)
+BinTree FindMin(BinTree t)
 {
-
-	if (t == NULL)
-
-	{
-
-		return 0;
-
-	}
-
-	else
-
-	{
-
-		return (numofbTree(t->Lchild) + numofbTree(t->Rchild) + 1);
-
-	}
-
-
-
-}
-
-//Í³¼Æ¶ş²æÊ÷ÖĞÒ¶×Ó½áµãµÄ¸öÊı(µİ¹é)
-
-int numofbTreeleaves(bintree t)
-
-{
-
-
-
-	if ((t->Lchild == NULL) && (t->Rchild == NULL))
-
-	{
-
-		return 1;
-
-	}
-
-	else
-
-	{
-
-		if (t->Lchild == NULL && (t->Rchild != NULL))//Èç¹û×ó×ÓÊ÷Îª¿Õ£¬ÄÇÃ´¾ÍÈ¥ÕÒÓÒ×ÓÊ÷ÖĞÒ¶×ÓµÄ¸öÊı
-
-			return numofbTreeleaves(t->Rchild);
-
-		else if (t->Rchild == NULL && t->Lchild != NULL)
-
-			return numofbTreeleaves(t->Lchild);
-
-		else if ((t->Lchild != NULL) && (t->Rchild != NULL))
-
-			return numofbTreeleaves(t->Lchild) + numofbTreeleaves(t->Rchild);
-
-	}
-
-}
-
-//Í³¼Æ¶ş²æÊ÷ÖĞÒ¶×Ó½áµãµÄ¸öÊı(·Çµİ¹é)
-
-int numofbTreeleaves1(bintree t)
-
-{
-
-	//ÔÚÇ°Ğò±éÀúµÄ¹ı³ÌÖĞ²éÕÒÒ¶×Ó½áµã
-
-	int count = 0;
-
-	Stack s;
-
-	bintree q = NULL;
-
-	q = t;
-
-	s = CreatStack();
-
-	while ((q != NULL) || (!IsEmpty(s)))
-
-	{
-
-		while (q != NULL)//Ò»Ö±Ïò×ó½«ÑØÍ¾×ó½ÚµãÑ¹ÈëÕ»ÖĞ
-
-		{
-
-			Push(s, q);//µÚÒ»´ÎÓöµ½qÕâ¸ö½áµã
-
-			q = q->Lchild;
-
-		}
-
-		if (!IsEmpty(s))
-
-		{
-
-			q = Pop(s);
-
-			if ((q->Lchild == NULL) && (q->Rchild == NULL))
-
-			{
-
-				count++;
-
-			}
-
-			q = q->Rchild;//·ÃÎÊ´Ë½ÚµãµÄÓÒ¶ù×Ó
-
-		}
-
-	}
-
-	return count;
-
-}
-
-//Êä³öÒ»¿Ã¸ø¶¨¶ş²æÊ÷ÔÚÖĞĞò±éÀúÏÂµÄ×îºóÒ»¸ö½áµã
-
-void Btnode_end_value(bintree t)
-
-{
-
-	Stack s;
-
-	bintree q, r = NULL;
-
-	q = t;
-
-	s = CreatStack();
-
-	while (q != NULL)//Ò»Ö±ÏòÓÒ½«ÑØÍ¾ÓÒ½ÚµãÑ¹ÈëÕ»ÖĞ
-
-	{
-
-		Push(s, q);//µÚÒ»´ÎÓöµ½qÕâ¸ö½áµã
-
-		q = q->Rchild;
-
-	}
-
-	r = Pop(s);
-
-	printf("%c\n", r->data);
-
-}
-
-//¸ø¶¨ÈÎÒâÁ½¸ö½áµã£¬·µ»ØÕâÁ½¸ö½áµã×î½üµÄ¹²Í¬×æÏÈ
-
-bintree Btnode_nearest_parents(bintree t, bintree p, bintree q)
-
-{
-
-	if (t == NULL || p == t || q == t)//Èç¹ûÊÇ¿Ã¿ÕÊ÷»òÕßp,qÓĞÒ»¸öÊÇ¸ù½ÚµãÄÇÃ´¹²Í¬×æÏÈ¼´Îª¸ù½áµã
-
+	if (!t)//ç©ºæ ‘è¿”å›NULL
+		return NULL;
+	else if (!t->Lchild)//å¦‚æœå·¦å­æ ‘ä¸ºç©ºå°±æ‰¾åˆ°äº†
 		return t;
-
-	bintree left = Btnode_nearest_parents(t->Lchild, p, q);//ÔÚ×óÓÒ×ÓÊ÷ÀïÃæÑ°ÕÒ×î½ü¹²Í¬×æÏÈ
-
-	bintree right = Btnode_nearest_parents(t->Rchild, p, q);
-
-	if (left != NULL && right != NULL)//Èç¹û×óÓÒ×ÓÊ÷·µ»ØµÄ½á¹û¶¼²»Îª¿Õ£¬ÄÇÃ´×î½ü¹²Í¬×æÏÈ¿Ï¶¨ÊÇ¸ù½Úµã
-
-		return t;
-
 	else
-
-		return left == NULL ? right : left;
-
+		return FindMin(t->Lchild);//ç»§ç»­æŸ¥æ‰¾å·¦å­æ ‘
 }
-
-//¶ş²æÊ÷µÄdepth
-
-int depth(bintree t)
-
+//åœ¨äºŒå‰æœç´¢æ ‘é‡Œè¿”å›æœ€å¤§å€¼ç»“ç‚¹çš„åœ°å€(éé€’å½’)
+BinTree FindMax(BinTree t)
 {
-
-	int h = 0, lh, rh;
-
-	if (t == NULL)
-
+	if (t)//ç°åˆ¤æ–­tæ˜¯å¦ä¸ºç©º
 	{
-
-		return h;
-
+		while (t->Rchild != NULL)
+		{
+			t = t->Rchild;
+		}
 	}
-
-	else
-
-	{
-
-		lh = depth(t->Lchild);
-
-		rh = depth(t->Rchild);
-
-		h = (lh >= rh) ? lh : rh;
-
-		return h + 1;
-
-	}
-
-}
-
-//Ïú»ÙÒ»¿Ã¶ş²æÊ÷£¨²ÉÓÃºóĞò±éÀúÏú»Ù¶ş²æÊ÷£©
-
-void destroy_btree(bintree t)//´«ÈëµÄÖ»ÊÇrootµÄÒ»¸öÌæ´úÆ·,´Ëº¯ÊıÎŞ·¨É¾³ıroot£¬ÒªÏëÉ¾³ıµÃ´«ÈëÖ¸ÕëµÄÖ¸Õë¡£
-
-{
-
-	if (t == NULL)//¿ÕÊ÷
-
-		return;
-
-	destroy_btree(t->Lchild);
-
-	destroy_btree(t->Rchild);
-
-	free(t);
-
-	return;
-
-}
-
-//¸ù¾İÇ°Ğò±éÀúµÄ½á¹û´´½¨Ò»¸ö¶ş²æÊ÷
-
-bintree createbintree()
-
-{
-
-	char ch;
-
-	bintree t;
-
-	if ((ch = getchar()) == '#')
-
-		t = NULL;
-
-	else
-
-	{
-
-		t = (bintree)malloc(sizeof(bintnode));
-
-		t->data = ch;
-
-		t->Lchild = createbintree();
-
-		t->Rchild = createbintree();
-
-	}
-
 	return t;
-
 }
-
-int menu()
-
+//äºŒå‰æœç´¢æ ‘çš„æ’å…¥æ“ä½œ
+BinTree Insert(BinTree t, datatype x)
 {
-
-
-
-	bool LOOP = true;					// Ñ­»·¿ØÖÆ±äÁ¿
-
-	int Choice_Num = -1;				// Ñ¡Ôñº¯ÊıĞòºÅ
-
-	while (LOOP)
-
+	if (t == NULL)//æ ‘ä¸ºç©ºæ ‘
 	{
-
-		system("cls");
-
-		printf("\n");
-
-		printf("\n\t\t*******************************\n");
-
-		printf("\n\t\t******\t 1. Ç°Ğò±éÀú·¨´´½¨Ê÷      ******\n");
-
-		printf("\n\t\t******\t 2. Ç°Ğò±éÀú£¨µİ¹é£©      ******\n");
-
-		printf("\n\t\t******\t 3. ÖĞĞò±éÀú£¨µİ¹é£©     ******\n");
-
-		printf("\n\t\t******\t 4. ºóĞò±éÀú£¨µİ¹é£©       ******\n");
-
-		printf("\n\t\t******\t 5. Ç°Ğò±éÀú£¨·Çµİ¹é£©       ******\n");
-
-		printf("\n\t\t******\t 6. ÖĞĞò±éÀú£¨·Çµİ¹é£©       ******\n");
-
-		printf("\n\t\t******\t 7. ºóĞò±éÀú£¨·Çµİ¹é£©       ******\n");
-
-		printf("\n\t\t******\t 8. ¶ş²æÊ÷ÖĞ½áµãµÄ¸öÊı       ******\n");
-
-		printf("\n\t\t******\t 9. ¶ş²æÊ÷µÄÉî¶È       ******\n");
-
-		printf("\n\t\t******\t 10. ¶ş²æÊ÷µÄÒ¶×Ó½áµãµÄ¸öÊı£¨µİ¹é£©       ******\n");
-
-		printf("\n\t\t******\t 11. ¶ş²æÊ÷µÄÒ¶×Ó½áµãµÄ¸öÊı£¨·Çµİ¹é£©       ******\n");
-
-		printf("\n\t\t******\t 12. ¶ş²æÊ÷ÖĞĞò±éÀúÇé¿öÏÂµÄ×îºóÒ»¸ö½áµãÖµ       ******\n");
-
-		printf("\n\t\t******\t 13. ¶ş²æÊ÷Á½¸ö½áµãµÄ×î½ü¹²Í¬×æÏÈ       ******\n");
-
-		printf("\n\t\t******\t 14. Ïú»ÙÒ»¿Ã¶ş²æÊ÷       ******\n");
-
-		printf("\n\t\t******\t 15.ÍË³ö²Ù×÷ÏµÍ³ ******\n");
-
-		printf("\n\t\t*******************************\n");
-
-		printf("\n\t\tÇëÊäÈëÄúÑ¡Ôñ²Ù×÷µÄ±àºÅ£º");
-
-		Choice_Num = Getint();
-
-		switch (Choice_Num)
-
-		{
-
-		case 1:
-
-			system("cls");
-
-
-
-			root = createbintree();
-
-
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 2:
-
-			system("cls");
-
-
-
-			preorder(root);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 3:
-
-			system("cls");
-
-			midorder(root);
-
-
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 4:
-
-			system("cls");
-
-			behindorder(root);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 5:
-
-			system("cls");
-
-			preorder1(root);
-
-
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 6:
-
-			system("cls");
-
-			midorder1(root);
-
-
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 7:
-
-			system("cls");
-
-			behindorder1(root);
-
-
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 8:
-
-			system("cls");
-
-			int count;
-
-			count = numofbTree(root);
-
-			printf("%d\n", count);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 9:
-
-			system("cls");
-
-			count = depth(root);
-
-			printf("%d\n", count);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 10:
-
-			system("cls");
-
-			count = numofbTreeleaves(root);
-
-			printf("%d\n", count);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 11:
-
-			system("cls");
-
-			count = numofbTreeleaves1(root);
-
-			printf("%d\n", count);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 12:
-
-			system("cls");
-
-			Btnode_end_value(root);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 13:
-
-			system("cls");
-
-			bintree p, q, r;
-
-			char  a, b;
-
-			printf("ÇëÊäÈëÒª²éÕÒµÄÁ½¸ö½áµãµÄÖµ\n");
-
-			scanf_s("%c %c", &a, 1, &b, 1);
-
-			p = locate(root, a);
-
-			q = locate(root, b);
-
-			if (p == NULL && q != NULL)
-
-				printf("Ê÷ÖĞÃ»ÓĞ½áµã%c\n", a);
-
-			else if (q == NULL && p != NULL)
-
-				printf("Ê÷ÖĞÃ»ÓĞ½áµã%c\n", b);
-
-			else if (!p && !q)
-
-				printf("Ê÷ÖĞÃ»ÓĞ½áµã%cºÍ%c\n", a, b);
-
-			else
-
-			{
-
-				r = Btnode_nearest_parents(root, p, q);
-
-				printf("%c\n", r->data);
-
-			}
-
-			Sleep(2000);
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 14:
-
-			system("cls");
-
-			destroy_btree(root);
-
-			root = NULL;
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼ü¼ÌĞø!");
-
-			getchar();
-
-			break;
-
-		case 15:
-
-			printf("\n\t\tÇë°´ÈÎÒâ¼üÍË³ö²Ù×÷ÏµÍ³");
-
-			getchar();
-
-			return 0;
-
-		default:
-
-			printf("\n\t\tÊäÈëÓĞÎó£¡°´ÈÎÒâ¼ü¼ÌĞø");
-
-			getchar();
-
-			break;
-
-		}
-
+		t = (BinTree)malloc(sizeof(TNode));
+		t->info = x;
+		t->Lchild = NULL;
+		t->Rchild = NULL;
 	}
-
-	return 1;
-
+	else
+	{
+		if (x < t->info)
+		{
+			t->Lchild = Insert(t->Lchild, x);//é€’å½’æ’å…¥å·¦å­æ ‘
+		}
+		else if (x > t->info)
+		{
+			t->Rchild = Insert(t->Rchild, x);//é€’å½’æ’å…¥å³å­æ ‘
+		}
+		else
+		{
+			;//å¦‚æœç­‰äºçš„è¯å•¥ä¹Ÿä¸åš
+		}
+			
+	}
+	return t;
 }
-
-int main()
-
+//äºŒå‰æœç´¢æ ‘çš„åˆ é™¤æ“ä½œ
+BinTree Delete(BinTree t, datatype x)
 {
-
-	system("mode con cols=63 lines=46,color 12");       /*µ÷Õû´°¿Ú´óĞ¡*/
-
-	while (menu());
-
-	system("pause");
-	return 0;
-
+	BinTree tmp = NULL;
+	if (t == NULL)
+		printf("è¦åˆ é™¤çš„å…ƒç´ æœªæ‰¾åˆ°!\n");
+	else
+	{
+		//å…ˆæ‰¾åˆ°è¦åˆ é™¤çš„å…ƒç´ 
+		if (x < t->info)
+			t->Lchild = Delete(t->Lchild, x);
+		else if (x > t->info)
+			t->Rchild = Delete(t->Rchild, x);
+		else//æ‰¾åˆ°äº†
+		{
+			//å¦‚æœè¢«åˆ é™¤ç»“ç‚¹æœ‰ä¸¤ä¸ªå­ç»“ç‚¹
+			if (t->Lchild&&t->Rchild)
+			{
+				tmp = FindMin(t->Rchild);//æ‰¾åˆ°å³å­æ ‘ä¸­çš„æœ€å°å€¼
+				t->info = tmp->info;
+				t->Rchild = Delete(t->Rchild, tmp->info);
+			}
+			//å¦‚æœè¢«åˆ é™¤çš„ç»“ç‚¹æœ‰ä¸€ä¸ªå­ç»“ç‚¹æˆ–æ²¡æœ‰å­èŠ‚ç‚¹
+			else
+			{
+				tmp = t;
+				if (!t->Lchild)//åªæœ‰å³å­èŠ‚ç‚¹æˆ–æ— å­ç»“ç‚¹
+					t = t->Rchild;
+				else //åªæœ‰å·¦å­èŠ‚ç‚¹
+					t = t->Lchild;
+				free(tmp);
+			}
+		}
+	}
+	return t;
 }
-
-
+int main()
+{
+	
+	return 0;
+}
