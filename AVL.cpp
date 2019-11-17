@@ -10,6 +10,44 @@ struct AVLNode {
 	AVLTree Right;    /* 指向右子树 */
 	int Height;       /* 树高 */
 };
+/////////////////循环栈（顺序）//////////////////
+typedef AVLTree datatype;
+typedef  struct {
+	datatype a[MaxSize];
+	int front;
+	int rear;
+}sequence_queue;
+//初始化
+sequence_queue* init()
+{
+	sequence_queue* q = (sequence_queue*)malloc(sizeof(sequence_queue));
+	q->front = q->rear = 0;
+	return  q;
+}
+//插入操作
+void insert_sequence_cqueue(sequence_queue *sq, datatype x)
+{
+	if ((sq->rear + 1) % MaxSize == sq->front)
+	{
+		printf("\n顺序循环队列是满的！无法进行插入操作！");
+		return;
+	}
+	sq->a[sq->rear] = x;
+	sq->rear = (sq->rear + 1) % MaxSize;
+}
+//出队操作
+datatype pop_sequence_cqueue(sequence_queue *sq)
+{
+	datatype t;
+	if (sq->front == sq->rear)
+	{
+		printf("循环队列是空的！无法进行出队操作！\n");
+	}
+	t = sq->a[sq->front];
+	sq->front = (sq->front + 1) % MaxSize;
+	return t;
+}
+///////////////////////////////////////////////////
 int Max(int a, int b)
 {
 	return a > b ? a : b;
@@ -124,6 +162,7 @@ AVLTree Input(AVLTree T)
 	}
 	return T;
 }
+//树的前序遍历
 void preorder(AVLTree t)
 {
 	if (t != NULL)
@@ -133,11 +172,30 @@ void preorder(AVLTree t)
 		preorder(t->Right);
 	}
 }
+//树的层序遍历
+void level_order(AVLTree t)
+{
+	AVLTree s = NULL;
+	sequence_queue *sq = NULL;
+	if (t == NULL)
+		return;
+	sq = init();
+	insert_sequence_cqueue(sq, t);
+	while (sq->front != sq->rear)//当栈不空时
+	{
+		s = pop_sequence_cqueue(sq);
+		printf("%d ", s->Data);
+		if (s->Left != NULL)
+			insert_sequence_cqueue(sq, s->Left);
+		if (s->Right != NULL)
+			insert_sequence_cqueue(sq, s->Right);
+	}
+}
 int main()
 {
 	AVLTree T = NULL;
 	T = Input(T);
-	preorder(T);
+	level_order(T);
 	system("pause");
 	return 0;
 }
