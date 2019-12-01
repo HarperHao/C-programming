@@ -10,7 +10,7 @@ void Shellsort_sedgewick(int A[], int n)
 	{
 		;
 	}
-	for (D = Sedgewick[Si]; D > 0; Si++)
+	for (D = Sedgewick[Si]; D > 0;D=Sedgewick[++Si])
 	{
 		for (P = D; P < n; P++)//³éÅÆ
 		{
