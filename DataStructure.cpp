@@ -50,6 +50,7 @@ tab ReadFile(tab t, const char *filename)
 void Shell_sort(tab t)
 {
 	int Si,D,i,j;
+	stu tmp;
 	keytype temp;
 	int Sedgewick[] = { 929, 505, 209, 109, 41, 19, 5, 1, 0 };
 	for (Si = 0; Sedgewick[Si] >= t->length; Si++)
@@ -62,13 +63,14 @@ void Shell_sort(tab t)
 		for (i = D; i < t->length; i++)
 		{
 			temp = t->S[i].ID_Card;
+			tmp = t->S[i];
 			//≈≤Œª÷√
 			for (j = i; temp < t->S[j - D].ID_Card&&j >= D; j = j - D)
 			{
 				t->S[j] = t->S[j - D];
 			}
 			//≤Â≈∆
-			t->S[j] = t->S[i];
+			t->S[j] = tmp;
 		}
 	}
 }
