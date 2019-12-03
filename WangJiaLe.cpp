@@ -161,12 +161,12 @@ void Add(tab t)
 		printf("请依次输入商品编号,商品名称,商品单价,商品库存数量!\n");
 		scanf_s("%d %s %d %d", &t->S[t->length].identifier, t->S[t->length].name, 10, &t->S[t->length].Price, &t->S[t->length].number);
 		FILE *f;
-		fopen_s(&f, "Goods_Data.txt", "a+");
+		fopen_s(&f, "Goods_Data.txt", "a");
 		fprintf_s(f, "%d %s %d %d", t->S[t->length].identifier, t->S[t->length].name, t->S[t->length].Price, t->S[t->length].number);
 		t->length++;
-		/*i=fseek(f, 0L, SEEK_SET);
-		printf("%d", i);
-		fprintf_s(f, "%d\n", t->length);*/
+		fclose(f);
+		fopen_s(&f, "Goods_Data.txt", "r+");
+		fprintf(f, "%d", t->length);
 		fclose(f);
 		printf("添加商品信息成功！\n");
 	}
